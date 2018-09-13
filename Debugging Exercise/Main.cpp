@@ -40,25 +40,29 @@ int main()
 	cout << "A squad of marines approaches a swarm of Zerglings and opens fire! The Zerglings charge!" << endl;
 	cout << endl;
 	// Attack each other until only one team is left alive
-	while (aliveMarines > 0 && aliveZerglings > 0) // If anyone is left alive to fight . . .
+	while (marineAlive(squad, squadSize) && zerglingAlive(swarm, swarmSize)) // If anyone is left alive to fight . . .
 	{
 		if (marineAlive(squad, squadSize)) // if there's at least one marine alive
 		{
 			for (size_t i = 0; i < squadSize; i++) // go through the squad
 			{
+				//skips if the marine at index i is dead
 				if (!squad[i].isAlive()) {
 					continue;
 				}
-				// each marine will attack the first zergling in the swarm
 
-				for (size_t j = 0; j < swarmSize; j++) {
+				for (size_t j = 0; j < swarmSize; j++) { //go through the swarm
+					//skips if the zergling at index i is dead
 					if (!swarm[j].isAlive()) {
 						continue;
 					}
+
+					// each alive marine will attack the first alive zergling in the swarm
 					cout << "A marine " << i << " fires zergling "<< j << " for " << squad[i].attack() << " damage. " << endl;
+
 					swarm[j].takeDamage(squad[i].attack());
 
-					if (!swarm[j].isAlive()) // if the zergling dies, it is marked as such
+					if (!swarm[j].isAlive()) // if the zergling dies or survives, it is marked as such
 					{
 						aliveZerglings--;
 						cout << "The zergling " << j << " dies" << endl;
@@ -75,20 +79,24 @@ int main()
 		cout << endl;
 		if (zerglingAlive(swarm, swarmSize)) // if there's at least one zergling alive
 		{
-			for (size_t i = 0; i < swarmSize; i++) // go through the squad
+			for (size_t i = 0; i < swarmSize; i++) // go through the swarm
 			{
+				//skips if the zergling at index i is dead
 				if (!swarm[i].isAlive()) {
 					continue;
 				}
 
-				for (size_t j = 0; j < squadSize; j++) {
+				
+				for (size_t j = 0; j < squadSize; j++) { //go throught the squad
+			        //skips if the marine at index i is dead
 					if (!squad[j].isAlive()) {
 						continue;
 					}
+					// each alive zergling will attack the first alive marine in the squad
 					cout << "A zergling " << i << " attacks marine " << j << " for " << swarm[i].attack() << " damage. " << endl;
 
 					squad[j].takeDamage(swarm[i].attack());
-					if (!squad[j].isAlive()) // if the marine dies, it is marked as such
+					if (!squad[j].isAlive()) // if the marine or survives dies, it is marked as such
 					{
 						aliveMarines--;
 						cout << "The marine " << j << " dies" << endl;
@@ -122,6 +130,7 @@ int main()
 bool marineAlive(Marine * squadArr, size_t arrSize)
 {
 	for (size_t i = 0; i < arrSize; i++) {
+		//if there is at least 1 marine alive return true;
 		if (squadArr[i].isAlive()) {
 			return true;
 			break;
@@ -134,6 +143,7 @@ bool marineAlive(Marine * squadArr, size_t arrSize)
 bool zerglingAlive(Zergling * swarmArr, size_t arrSize)
 {
 	for (size_t i = 0; i < arrSize; i++) {
+		//if there is at least 1 zergling alive return true;
 		if (swarmArr[i].isAlive()) {
 			return true;
 			break;
